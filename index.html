@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mattannechari.co</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #e8ddd3;
+            --bg-deep: #ddd0c3;
+            --text: #3a3028;
+            --text-light: #7a6e62;
+            --accent: #c4653a;
+            --accent-glow: #e07a4f;
+            --warm-gold: #d4a55a;
+            --cream: #f2ece5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 256px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Warm ambient light */
+        .ambient {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .ambient-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--warm-gold);
+            top: -200px;
+            right: -100px;
+            animation: drift-1 20s ease-in-out infinite;
+        }
+
+        .ambient-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+            bottom: -200px;
+            left: -100px;
+            animation: drift-2 25s ease-in-out infinite;
+        }
+
+        @keyframes drift-1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-40px, 30px); }
+        }
+
+        @keyframes drift-2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -40px); }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            z-index: 1;
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* The floating graphic */
+        .graphic-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-14px); }
+        }
+
+        .graphic-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 20px 60px rgba(196, 101, 58, 0.25));
+        }
+
+        /* Rotating ring behind graphic */
+        .ring {
+            position: absolute;
+            inset: -20px;
+            border-radius: 50%;
+            border: 1px solid var(--accent);
+            opacity: 0.15;
+            animation: spin 30s linear infinite;
+        }
+
+        .ring-2 {
+            inset: -35px;
+            border-color: var(--warm-gold);
+            opacity: 0.08;
+            animation-duration: 45s;
+            animation-direction: reverse;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .text-block {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .domain {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            letter-spacing: 0.02em;
+            color: var(--text);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.3s forwards;
+        }
+
+        .divider {
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards, glow 4s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 8px rgba(196, 101, 58, 0); }
+            50% { box-shadow: 0 0 16px rgba(196, 101, 58, 0.3); }
+        }
+
+        .coming-soon {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--text-light);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.7s forwards;
+        }
+
+        /* Small bottom detail */
+        .footer-mark {
+            position: fixed;
+            bottom: 32px;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--text-light);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.2s forwards;
+        }
+
+        @media (max-width: 480px) {
+            .graphic-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .ring { inset: -14px; }
+            .ring-2 { inset: -24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient ambient-1"></div>
+    <div class="ambient ambient-2"></div>
+
+        <div class="text-block">
+            <div class="domain">mattannechari.co</div>
+            <div class="divider"></div>
+            <div class="coming-soon">Coming Soon</div>
+        </div>
+    </div>
+
+    <div class="footer-mark">MA</div>
+</body>
+</html>
