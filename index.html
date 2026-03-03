@@ -6,17 +6,17 @@
     <title>mattannechari.co</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;700;900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #e8ddd3;
-            --bg-deep: #ddd0c3;
-            --text: #3a3028;
-            --text-light: #7a6e62;
-            --accent: #c4653a;
-            --accent-glow: #e07a4f;
-            --warm-gold: #d4a55a;
-            --cream: #f2ece5;
+            --bg: #0e0e0e;
+            --bg-subtle: #161616;
+            --text: #f0efe9;
+            --text-dim: #6b6b6b;
+            --text-mid: #9a9a9a;
+            --accent: #c8ff00;
+            --accent-dim: rgba(200, 255, 0, 0.08);
+            --rule: rgba(255, 255, 255, 0.08);
         }
 
         * {
@@ -25,119 +25,157 @@
             box-sizing: border-box;
         }
 
+        html {
+            font-size: 16px;
+        }
+
         body {
             background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Hanken Grotesk', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Outfit', sans-serif;
-            color: var(--text);
             overflow: hidden;
             position: relative;
+            cursor: default;
         }
 
-        /* Subtle grain texture overlay */
-        body::before {
+        /* Noise grain overlay */
+        body::after {
             content: '';
             position: fixed;
             inset: 0;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             background-size: 256px;
             pointer-events: none;
             z-index: 100;
         }
 
-        /* Warm ambient light */
-        .ambient {
+        /* Top bar */
+        .topbar {
             position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 40px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeDown 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .topbar-left {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .ambient-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--warm-gold);
-            top: -200px;
-            right: -100px;
-            animation: drift-1 20s ease-in-out infinite;
-        }
-
-        .ambient-2 {
-            width: 500px;
-            height: 500px;
             background: var(--accent);
-            bottom: -200px;
-            left: -100px;
-            animation: drift-2 25s ease-in-out infinite;
+            animation: pulse 2.5s ease-in-out infinite;
         }
 
-        @keyframes drift-1 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-40px, 30px); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        @keyframes drift-2 {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -40px); }
-        }
-
-        .container {
+        /* Center content */
+        .center {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 48px;
-            z-index: 1;
-            animation: fadeIn 1.2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* The floating graphic */
-        .graphic-container {
             position: relative;
-            width: 200px;
-            height: 200px;
-            animation: float 6s ease-in-out infinite;
+            z-index: 1;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-14px); }
+        /* Geometric ring graphic */
+        .ring-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeScale 1s ease-out 0.5s forwards;
         }
 
-        .graphic-container svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 20px 60px rgba(196, 101, 58, 0.25));
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        /* Rotating ring behind graphic */
-        .ring {
+        .ring-outer {
             position: absolute;
-            inset: -20px;
+            inset: 0;
             border-radius: 50%;
-            border: 1px solid var(--accent);
-            opacity: 0.15;
-            animation: spin 30s linear infinite;
+            border: 1px solid var(--rule);
+            animation: spin 60s linear infinite;
         }
 
-        .ring-2 {
-            inset: -35px;
-            border-color: var(--warm-gold);
-            opacity: 0.08;
-            animation-duration: 45s;
-            animation-direction: reverse;
+        .ring-inner {
+            position: absolute;
+            inset: 24px;
+            border-radius: 50%;
+            border: 1px solid rgba(200, 255, 0, 0.15);
+            animation: spin 40s linear infinite reverse;
+        }
+
+        .ring-accent {
+            position: absolute;
+            inset: 48px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 20px rgba(200, 255, 0, 0.4), 0 0 60px rgba(200, 255, 0, 0.1);
+        }
+
+        /* Tick marks on outer ring */
+        .tick {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 8px;
+            background: var(--text-dim);
+            transform-origin: 0 -86px;
         }
 
         @keyframes spin {
@@ -145,81 +183,282 @@
             to { transform: rotate(360deg); }
         }
 
-        .text-block {
+        /* Domain name */
+        .domain {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 6vw, 3.8rem);
+            letter-spacing: -0.02em;
+            line-height: 1;
+            color: var(--text);
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 0.7s forwards;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
         }
 
-        .domain {
-            font-family: 'Outfit', sans-serif;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
-            letter-spacing: 0.02em;
-            color: var(--text);
+        .domain .tld {
+            color: var(--accent);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Divider */
+        .divider {
+            width: 48px;
+            height: 1px;
+            background: var(--rule);
+            margin: 28px 0;
+            position: relative;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 0.9s forwards;
+        }
+
+        .divider::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        /* Coming Soon */
+        .coming-soon {
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--text-mid);
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 1.1s forwards;
+        }
+
+        /* Bottom bar */
+        .bottombar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 28px 40px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out 1.4s forwards;
+        }
+
+        .bottombar-left {
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .bottombar-right {
+            font-size: 0.65rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+        }
+
+        .bottombar-right a {
+            color: var(--text-mid);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 1px;
+        }
+
+        .bottombar-right a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Horizontal rules at edges */
+        .edge-rule {
+            position: fixed;
+            left: 40px;
+            right: 40px;
+            height: 1px;
+            background: var(--rule);
+            z-index: 10;
             opacity: 0;
             animation: fadeIn 1s ease-out 0.3s forwards;
         }
 
-        .divider {
-            width: 40px;
-            height: 2px;
-            background: var(--accent);
-            border-radius: 2px;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.5s forwards, glow 4s ease-in-out infinite 1.5s;
+        .edge-rule-top { top: 72px; }
+        .edge-rule-bottom { bottom: 72px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 8px rgba(196, 101, 58, 0); }
-            50% { box-shadow: 0 0 16px rgba(196, 101, 58, 0.3); }
-        }
-
-        .coming-soon {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 700;
-            font-size: clamp(0.75rem, 2vw, 0.9rem);
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: var(--text-light);
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.7s forwards;
-        }
-
-        /* Small bottom detail */
-        .footer-mark {
+        /* Subtle grid lines in background */
+        .grid-lines {
             position: fixed;
-            bottom: 32px;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--text-light);
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
             opacity: 0;
-            animation: fadeIn 1s ease-out 1.2s forwards;
+            animation: fadeIn 2s ease-out 0.5s forwards;
         }
 
-        @media (max-width: 480px) {
-            .graphic-container {
-                width: 150px;
-                height: 150px;
+        .grid-line-v {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--rule);
+            opacity: 0.3;
+        }
+
+        .grid-line-v:nth-child(1) { left: 25%; }
+        .grid-line-v:nth-child(2) { left: 50%; }
+        .grid-line-v:nth-child(3) { left: 75%; }
+
+        /* Corner markers */
+        .corner-mark {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.6s forwards;
+        }
+
+        .corner-mark::before,
+        .corner-mark::after {
+            content: '';
+            position: absolute;
+            background: var(--text-dim);
+        }
+
+        .corner-mark::before {
+            width: 12px;
+            height: 1px;
+        }
+
+        .corner-mark::after {
+            width: 1px;
+            height: 12px;
+        }
+
+        .corner-tl { top: 80px; left: 40px; }
+        .corner-tl::before { top: 0; left: 0; }
+        .corner-tl::after { top: 0; left: 0; }
+
+        .corner-tr { top: 80px; right: 40px; }
+        .corner-tr::before { top: 0; right: 0; }
+        .corner-tr::after { top: 0; right: 0; }
+
+        .corner-bl { bottom: 80px; left: 40px; }
+        .corner-bl::before { bottom: 0; left: 0; }
+        .corner-bl::after { bottom: 0; left: 0; }
+
+        .corner-br { bottom: 80px; right: 40px; }
+        .corner-br::before { bottom: 0; right: 0; }
+        .corner-br::after { bottom: 0; right: 0; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .topbar, .bottombar {
+                padding: 20px 24px;
             }
 
-            .ring { inset: -14px; }
-            .ring-2 { inset: -24px; }
+            .edge-rule {
+                left: 24px;
+                right: 24px;
+            }
+
+            .edge-rule-top { top: 58px; }
+            .edge-rule-bottom { bottom: 58px; }
+
+            .corner-mark { display: none; }
+            .grid-lines { display: none; }
+
+            .ring-container {
+                width: 140px;
+                height: 140px;
+                margin-bottom: 36px;
+            }
+
+            .bottombar-left { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="ambient ambient-1"></div>
-    <div class="ambient ambient-2"></div>
 
-        <div class="text-block">
-            <div class="domain">mattannechari.co</div>
-            <div class="divider"></div>
-            <div class="coming-soon">Coming Soon</div>
+    <!-- Top bar -->
+    <div class="topbar">
+        <div class="topbar-left">MA</div>
+        <div class="topbar-right">
+            <span class="status-dot"></span>
+            <span>Building</span>
         </div>
     </div>
 
-    <div class="footer-mark">MA</div>
+    <!-- Edge rules -->
+    <div class="edge-rule edge-rule-top"></div>
+    <div class="edge-rule edge-rule-bottom"></div>
+
+    <!-- Corner marks -->
+    <div class="corner-mark corner-tl"></div>
+    <div class="corner-mark corner-tr"></div>
+    <div class="corner-mark corner-bl"></div>
+    <div class="corner-mark corner-br"></div>
+
+    <!-- Background grid -->
+    <div class="grid-lines">
+        <div class="grid-line-v"></div>
+        <div class="grid-line-v"></div>
+        <div class="grid-line-v"></div>
+    </div>
+
+    <!-- Center content -->
+    <div class="center">
+        <div class="ring-container">
+            <div class="ring-outer">
+                <div class="tick" style="transform: rotate(0deg)"></div>
+                <div class="tick" style="transform: rotate(30deg)"></div>
+                <div class="tick" style="transform: rotate(60deg)"></div>
+                <div class="tick" style="transform: rotate(90deg)"></div>
+                <div class="tick" style="transform: rotate(120deg)"></div>
+                <div class="tick" style="transform: rotate(150deg)"></div>
+                <div class="tick" style="transform: rotate(180deg)"></div>
+                <div class="tick" style="transform: rotate(210deg)"></div>
+                <div class="tick" style="transform: rotate(240deg)"></div>
+                <div class="tick" style="transform: rotate(270deg)"></div>
+                <div class="tick" style="transform: rotate(300deg)"></div>
+                <div class="tick" style="transform: rotate(330deg)"></div>
+            </div>
+            <div class="ring-inner"></div>
+            <div class="ring-accent"></div>
+            <div class="ring-center"></div>
+        </div>
+
+        <div class="domain">mattannechari<span class="tld">.co</span></div>
+        <div class="divider"></div>
+        <div class="coming-soon">Coming Soon</div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="bottombar">
+        <div class="bottombar-left">
+            Consumer Insight &times; Product Strategy
+        </div>
+        <div class="bottombar-right">
+            <a href="https://www.linkedin.com/in/mattannecharico/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+    </div>
+
 </body>
 </html>
